@@ -14,5 +14,11 @@
         public Peca getPeca(int linha, int coluna) {
             return pecas[linha, coluna];
         }
+
+        //Coloca a peça X na posição especificada
+        public void colocarPeca(Peca peca, Posicao posicao) {
+            pecas[posicao.Linha, posicao.Coluna] = peca;
+            peca.posicao = posicao;
+        }
     }
 }
