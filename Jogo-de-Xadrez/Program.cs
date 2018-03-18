@@ -10,7 +10,7 @@ namespace Jogo_de_Xadrez
             Console.WriteLine(p);
 
             Tabuleiro t = new Tabuleiro(8, 8);
-
+            Tela.imprimirTabuleiro(t);
 
 
             Console.ReadLine();
