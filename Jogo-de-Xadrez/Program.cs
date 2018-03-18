@@ -8,12 +8,16 @@ namespace Jogo_de_Xadrez
         static void Main(string[] args) {
             Tabuleiro t = new Tabuleiro(8, 8);
 
-            t.colocarPeca(new Torre(t, Cor.Branco), new Posicao(0, 0));
-            t.colocarPeca(new Torre(t, Cor.Branco), new Posicao(1, 3));
-            t.colocarPeca(new Rei(t, Cor.Amarelo), new Posicao(2, 4));
+            try {
+                t.colocarPeca(new Torre(t, Cor.Branco), new Posicao(0, 0));
+                t.colocarPeca(new Torre(t, Cor.Branco), new Posicao(1, 3));
+                t.colocarPeca(new Rei(t, Cor.Branco), new Posicao(0, 8));
 
 
-            Tela.imprimirTabuleiro(t);
+                Tela.imprimirTabuleiro(t);
+            }catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
 
 
             Console.ReadLine();
