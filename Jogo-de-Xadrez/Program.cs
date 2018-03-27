@@ -6,15 +6,29 @@ namespace Jogo_de_Xadrez
 {
     class Program {
         static void Main(string[] args) {
-            Tabuleiro t = new Tabuleiro(8, 8);
+            //Tabuleiro t = new Tabuleiro(8, 8);
 
             try {
-                t.colocarPeca(new Torre(t, Cor.Preto), new Posicao(0, 0));
-                t.colocarPeca(new Torre(t, Cor.Preto), new Posicao(1, 3));
-                t.colocarPeca(new Rei(t, Cor.Branco), new Posicao(0, 7));
+
+                PartidaDeXadrez partida = new PartidaDeXadrez();
+
+                while (!partida.partidaFinalida) {
+
+                    Console.Clear();
+                    Tela.imprimirTabuleiro(partida.tab);
+
+                    Console.WriteLine("");
+                    Console.Write("Origem: ");
+                    Posicao origem = Tela.lerPosicaoXadrez().toPosicao();
+                    Console.Write("Destino: ");
+                    Posicao destino = Tela.lerPosicaoXadrez().toPosicao();
+
+                    partida.executarMovimento(origem, destino);
+                }
+
+                Tela.imprimirTabuleiro(partida.tab);
 
 
-                Tela.imprimirTabuleiro(t);
             }catch(Exception e) {
                 Console.WriteLine(e.Message);
             }

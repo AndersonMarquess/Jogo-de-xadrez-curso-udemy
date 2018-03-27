@@ -1,5 +1,6 @@
 ﻿using System;
 using tabuleiro;
+using xadrez;
 
 namespace Jogo_de_Xadrez {
     class Tela {
@@ -22,6 +23,16 @@ namespace Jogo_de_Xadrez {
             }
             Console.WriteLine("  a b c d e f g h");
         }
+
+        //Lê uma entrada de dados do teclado
+        public static PosicaoXadrez lerPosicaoXadrez() {
+            String escolha = Console.ReadLine();
+            Char coluna = escolha[0];
+            int linha = int.Parse(escolha[1] + "");
+            return new PosicaoXadrez(coluna, linha);
+        }
+
+
 
         public static void imprimirPeca(Peca peca) {
             if (peca.cor == Cor.Branco) {

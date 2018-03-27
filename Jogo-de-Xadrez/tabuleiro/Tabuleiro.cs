@@ -36,6 +36,17 @@
             peca.posicao = posicao;
         }
 
+        //Retira uma peça do tabuleiro
+        public Peca retiraPeca(Posicao pos) {
+            if (getPeca(pos) == null) {
+                return null;
+            }
+            Peca aux = getPeca(pos);
+            aux.posicao = null;
+            pecas[pos.Linha, pos.Coluna] = null;
+            return aux;
+        }
+
         //Verifica se a posição especificada está dentro dos limites do tabuleiro
         public bool posicaoNoTabuleiro (Posicao posicao) {
             if (posicao.Linha < 0 || posicao.Linha >= linhas || posicao.Coluna < 0 || posicao.Coluna >= colunas) {
