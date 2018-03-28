@@ -3,7 +3,7 @@
 
 namespace tabuleiro
 {
-    class Peca {
+    abstract class Peca {
         public Posicao posicao { set; get; }
         public Cor cor { protected set;  get; }
         public int qtdMovimento { get; protected set; }
@@ -19,6 +19,9 @@ namespace tabuleiro
         public void incrementarMovimento() {
             qtdMovimento++;
         }
+
+        //Método abstrato PRECISA de uma classe abstrata
+        public abstract bool[,] movimentosPossiveis();
         
     }
 }
