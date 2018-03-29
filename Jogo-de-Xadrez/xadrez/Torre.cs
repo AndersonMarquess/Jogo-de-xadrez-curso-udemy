@@ -17,7 +17,6 @@ namespace xadrez {
         }
 
         public override bool[,] movimentosPossiveis() {
-            Console.WriteLine("Chamou movimentos possíveis");
             bool[,] mat = new bool[tabuleiro.linhas, tabuleiro.colunas];
 
             Posicao pos = new Posicao(0, 0);
@@ -36,7 +35,6 @@ namespace xadrez {
             //Baixo
             pos.definirValores(posicao.Linha + 1, posicao.Coluna);
             while (tabuleiro.posicaoNoTabuleiro(pos) && (podeMover(pos))) {
-                Console.Write("Um Mat ficou verdadeiro");
                 mat[pos.Linha, pos.Coluna] = true;
                 //Verifica se existe uma peça na posição especificada e se a cor dela é diferente
                 if ((tabuleiro.getPeca(pos) != null) && (tabuleiro.getPeca(pos).cor != this.cor)) {

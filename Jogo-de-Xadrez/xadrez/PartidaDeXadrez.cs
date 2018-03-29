@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using tabuleiro;
 
 namespace xadrez {
@@ -7,6 +8,7 @@ namespace xadrez {
         public int turno { get; private set; }
         public Cor jogadorAtual { get; private set; }
         public bool partidaFinalida { get; private set; }
+        public bool xeque { get; private set; }
         private HashSet<Peca> pecasHashSet;
         private HashSet<Peca> capturadas;
 
@@ -15,13 +17,14 @@ namespace xadrez {
             turno = 1;
             jogadorAtual = Cor.Branco;
             partidaFinalida = false;
+            xeque = false;
             pecasHashSet = new HashSet<Peca>();
             capturadas = new HashSet<Peca>();
             colocarPeca();
         }
 
         //Movimenta uma peça do tabuleiro, remove uma peça se o destino já estiver ocupado
-        public void executarMovimento(Posicao origem, Posicao destino) {
+        public Peca executarMovimento(Posicao origem, Posicao destino) {
             Peca pecaMovida = tab.retiraPeca(origem);
             pecaMovida.incrementarMovimento();
             Peca pecaCapturada = tab.retiraPeca(destino);
@@ -29,11 +32,33 @@ namespace xadrez {
             if (pecaCapturada != null) {
                 capturadas.Add(pecaCapturada);
             }
+            return pecaCapturada;
+        }
+
+        public Peca desfazMovimento(Posicao origem, Posicao destino, Peca pecaCapturada) {
+            Peca pecaMovida = tab.retiraPeca(destino);
+            pecaMovida.decrementarMovimento();
+            //Peca pecaCapturada = tab.retiraPeca(origem);
+            tab.colocarPeca(pecaMovida, origem);
+            if (pecaCapturada != null) {
+                tab.colocarPeca(pecaCapturada, destino);
+                capturadas.Remove(pecaCapturada);
+            }
+            return pecaCapturada;
         }
 
         //Aciona o gatilho de mover a peça
         public void realizaJogada(Posicao origem, Posicao destino) {
-            executarMovimento(origem, destino);
+            Peca capturada = executarMovimento(origem, destino);
+            if (estaEmXeque(jogadorAtual)) {
+                desfazMovimento(origem, destino, capturada);
+                throw new TabuleiroException("Seu rei ficou em xeque, jogada desfeita");
+            }
+            if (estaEmXeque(corAdversario(jogadorAtual))) {
+                xeque = true; //se o seu movimento não o colocou em xeque então o rei adversario o está
+            } else {
+                xeque = false;
+            }
             turno++;
             mudarJogador();
         }
@@ -68,6 +93,54 @@ namespace xadrez {
             aux.ExceptWith(pecasCapturadas(cor));
             return aux;
         }
+
+        //Retorna a cor do adversario
+        private Cor corAdversario(Cor cor) {
+            if (cor == Cor.Branco) {
+                return Cor.Preto;
+            } else { 
+                return Cor.Branco;
+            }
+        }
+
+        //Retorna o rei de acordo com a cor especificada
+        private Peca getRei(Cor cor) {
+            foreach (Peca item in pecasEmJogo(cor)) {
+                //is serve para verificar se o Item é uma Instancia de rei
+                if (item is Rei) {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        //Verifica se o rei da cor especificada está em xeque
+        //public bool estaEmXeque(Cor cor) {
+        public bool estaEmXeque(Cor cor) {
+            Peca rei = getRei(cor);
+            if (rei == null) {
+                throw new TabuleiroException("O Rei da cor: "+cor+" Não está em jogo BIZARRO!");
+            }
+
+            foreach (Peca item in pecasEmJogo(corAdversario(cor))) {
+                bool[,] mat = item.movimentosPossiveis();
+                if (mat[rei.posicao.Linha, rei.posicao.Coluna]) {
+                    //ConsoleColor original = Console.ForegroundColor;
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    //Console.WriteLine("O Rei da cor: "+ corAdversario(cor) + " está em xeque.");
+                    //Console.ForegroundColor = original;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+
+
+
+
 
 
 
