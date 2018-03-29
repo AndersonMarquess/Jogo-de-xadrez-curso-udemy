@@ -25,14 +25,13 @@ namespace Jogo_de_Xadrez {
                 Console.Write(8 - i+ " ");
 
                 for (int j = 0; j < tab.colunas; j++) {
-                    //if (tab.getPeca(i, j) == null) {
-                        if (possioesPossiveis[i, j]) {
-                            Console.BackgroundColor = fundoAlterado;
-                        } else {
-                            Console.BackgroundColor = fundoOriginal;
-                        }
-                        imprimirPeca(tab.getPeca(i, j));
-                    //}
+                    if (possioesPossiveis[i, j]) {
+                        Console.BackgroundColor = fundoAlterado;
+                    } else {
+                        Console.BackgroundColor = fundoOriginal;
+                    }
+                    imprimirPeca(tab.getPeca(i, j));
+                    Console.BackgroundColor = fundoOriginal;
                 }
                 Console.WriteLine();
             }

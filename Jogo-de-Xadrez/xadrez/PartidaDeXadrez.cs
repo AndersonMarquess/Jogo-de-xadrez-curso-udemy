@@ -4,8 +4,8 @@ using tabuleiro;
 namespace xadrez {
     class PartidaDeXadrez {
         public Tabuleiro tab { get; private set; }
-        private int turno;
-        private Cor jogadorAtual;
+        public int turno { get; private set; }
+        public Cor jogadorAtual { get; private set; }
         public bool partidaFinalida { get; private set; }
 
         public PartidaDeXadrez() {
@@ -23,6 +23,43 @@ namespace xadrez {
             Peca pecaCapturada = tab.retiraPeca(destino);
             tab.colocarPeca(pecaMovida, destino);
         }
+
+        //Aciona o gatilho de mover a peça
+        public void realizaJogada(Posicao origem, Posicao destino) {
+            executarMovimento(origem, destino);
+            turno++;
+            mudarJogador();
+        }
+
+        //Muda o jogador que vai realizar o movimento
+        public void mudarJogador() {
+            if (jogadorAtual == Cor.Branco) {
+                jogadorAtual = Cor.Preto;
+            } else {
+                jogadorAtual = Cor.Branco;
+            }
+        }
+
+        public void validarPosicaoOrigem(Posicao posOrigem) {
+            if (tab.getPeca(posOrigem) == null) {
+                throw new TabuleiroException("Não existem peça na posição escolhida");
+            }
+            if (jogadorAtual != tab.getPeca(posOrigem).cor) {
+                throw new TabuleiroException("A Peça escolhida não é sua");
+            }
+            if (!tab.getPeca(posOrigem).existeMovimentosPossiveis()) {
+                throw new TabuleiroException("Não há movimentos possíveis para esse peça");
+            }
+
+        }
+
+        public void validarPosicaoDestino(Posicao origem, Posicao destino) {
+            if (!tab.getPeca(origem).podeMoverPara(destino)) {
+                throw new TabuleiroException("Destino invalido!");
+            }
+        }
+
+
 
         //Coloca uma peça no tabuleiro com a classe PosicaoXadrez, essa aceita char e linha e retorna posicao.
         private void colocarPeca() {
