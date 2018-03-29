@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using tabuleiro;
 
 namespace xadrez {
@@ -7,13 +7,17 @@ namespace xadrez {
         public int turno { get; private set; }
         public Cor jogadorAtual { get; private set; }
         public bool partidaFinalida { get; private set; }
+        private HashSet<Peca> pecasHashSet;
+        private HashSet<Peca> capturadas;
 
         public PartidaDeXadrez() {
             tab = new Tabuleiro(8, 8);
             turno = 1;
             jogadorAtual = Cor.Branco;
-            colocarPeca();
             partidaFinalida = false;
+            pecasHashSet = new HashSet<Peca>();
+            capturadas = new HashSet<Peca>();
+            colocarPeca();
         }
 
         //Movimenta uma peça do tabuleiro, remove uma peça se o destino já estiver ocupado
@@ -22,6 +26,9 @@ namespace xadrez {
             pecaMovida.incrementarMovimento();
             Peca pecaCapturada = tab.retiraPeca(destino);
             tab.colocarPeca(pecaMovida, destino);
+            if (pecaCapturada != null) {
+                capturadas.Add(pecaCapturada);
+            }
         }
 
         //Aciona o gatilho de mover a peça
@@ -39,6 +46,30 @@ namespace xadrez {
                 jogadorAtual = Cor.Branco;
             }
         }
+
+        //Faz um foreach nas peças capturadas e pega adiciona todas as peças da cor especificada em uma hashset e retorna
+        public HashSet<Peca> pecasCapturadas(Cor cor) {
+            HashSet<Peca> aux = new HashSet<Peca>();
+            foreach (Peca item in capturadas) {
+                if (item.cor == cor) {
+                    aux.Add(item);
+                }
+            }
+            return aux;
+        }
+
+        public HashSet<Peca> pecasEmJogo(Cor cor) {
+            HashSet<Peca> aux = new HashSet<Peca>();
+            foreach (Peca item in pecasHashSet) {
+                if (item.cor == cor) {
+                    aux.Add(item);
+                }
+            }
+            aux.ExceptWith(pecasCapturadas(cor));
+            return aux;
+        }
+
+
 
         public void validarPosicaoOrigem(Posicao posOrigem) {
             if (tab.getPeca(posOrigem) == null) {
@@ -59,24 +90,27 @@ namespace xadrez {
             }
         }
 
-
+        //Coloca uma peça no tabuleiro
+        public void colocarNovaPeca(char coluna, int linha, Peca peca) {
+            tab.colocarPeca(peca, new PosicaoXadrez(coluna, linha).toPosicao());
+            pecasHashSet.Add(peca);
+        }
 
         //Coloca uma peça no tabuleiro com a classe PosicaoXadrez, essa aceita char e linha e retorna posicao.
         private void colocarPeca() {
-            tab.colocarPeca(new Torre(tab, Cor.Branco), new PosicaoXadrez('c',1).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Branco), new PosicaoXadrez('c',2).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Branco), new PosicaoXadrez('d',2).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Branco), new PosicaoXadrez('e',1).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Branco), new PosicaoXadrez('e',2).toPosicao());
-            tab.colocarPeca(new Rei(tab, Cor.Branco), new PosicaoXadrez('d',1).toPosicao());
+            colocarNovaPeca('c', 1, new Torre(tab, Cor.Branco));
+            colocarNovaPeca('c', 2, new Torre(tab, Cor.Branco));
+            colocarNovaPeca('d', 2, new Torre(tab, Cor.Branco));
+            colocarNovaPeca('e', 1, new Torre(tab, Cor.Branco));
+            colocarNovaPeca('e', 2, new Torre(tab, Cor.Branco));
+            colocarNovaPeca('d', 1, new Rei(tab, Cor.Branco));
 
-
-            tab.colocarPeca(new Torre(tab, Cor.Preto), new PosicaoXadrez('c', 8).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Preto), new PosicaoXadrez('c', 7).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Preto), new PosicaoXadrez('d', 7).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Preto), new PosicaoXadrez('e', 8).toPosicao());
-            tab.colocarPeca(new Torre(tab, Cor.Preto), new PosicaoXadrez('e', 7).toPosicao());
-            tab.colocarPeca(new Rei(tab, Cor.Preto), new PosicaoXadrez('d', 8).toPosicao());
+            colocarNovaPeca('c', 8, new Torre(tab, Cor.Preto));
+            colocarNovaPeca('c', 7, new Torre(tab, Cor.Preto));
+            colocarNovaPeca('d', 7, new Torre(tab, Cor.Preto));
+            colocarNovaPeca('e', 8, new Torre(tab, Cor.Preto));
+            colocarNovaPeca('e', 7, new Torre(tab, Cor.Preto));
+            colocarNovaPeca('d', 8, new Rei(tab, Cor.Preto));
         }
     }
 }
