@@ -38,7 +38,7 @@ namespace tabuleiro
         }
 
         //Valida o destino
-        public bool podeMoverPara(Posicao posDestino) {
+        public bool movimentoPossivel(Posicao posDestino) {
             return movimentosPossiveis()[posDestino.Linha, posDestino.Coluna];
         } 
 
