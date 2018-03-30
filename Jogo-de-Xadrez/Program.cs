@@ -38,10 +38,9 @@ namespace Jogo_de_Xadrez
                         Console.ReadLine();
                     }
                 }
-
-                Tela.imprimirTabuleiro(partida.tab);
-
-
+                Console.Clear();
+                //Tela.imprimirTabuleiro(partida.tab);
+                Tela.imprimirPartida(partida);
             }catch(Exception e) {
                 Console.WriteLine(e.Message);
             }

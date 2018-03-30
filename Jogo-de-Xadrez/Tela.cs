@@ -14,12 +14,17 @@ namespace Jogo_de_Xadrez {
             Console.WriteLine();
 
             Console.WriteLine("Turno: " + partida.turno);
-            Console.WriteLine("Vez da jogada: " + partida.jogadorAtual);
-            if(partida.xeque){
-                ConsoleColor original = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("XEQUE!");
-                Console.ForegroundColor = original;
+            if (!partida.partidaFinalida) {
+                Console.WriteLine("Vez da jogada: " + partida.jogadorAtual);
+                if (partida.xeque) {
+                    ConsoleColor original = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("XEQUE!");
+                    Console.ForegroundColor = original;
+                }
+            } else {
+                Console.WriteLine("Xequemate!");
+                Console.WriteLine("Vencedor: " + partida.jogadorAtual);
             }
         }
 
@@ -44,21 +49,6 @@ namespace Jogo_de_Xadrez {
             }
             Console.Write(" ]");
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         public static void imprimirTabuleiro(Tabuleiro tab) {
             for (int i = 0; i < tab.linhas; i++) {
