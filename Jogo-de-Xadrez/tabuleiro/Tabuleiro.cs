@@ -60,6 +60,9 @@
             if (!posicaoNoTabuleiro(pos)) {
                 throw new TabuleiroException("Posição inválida.");
             }
+            //else {
+            //    return true;
+            //}
         }
     }
 }
