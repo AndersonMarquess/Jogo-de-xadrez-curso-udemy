@@ -1,4 +1,5 @@
-﻿using tabuleiro;
+﻿using System;
+using tabuleiro;
 
 namespace xadrez {
     class Peao : Peca {
@@ -48,6 +49,17 @@ namespace xadrez {
                     mat[pos.Linha, pos.Coluna] = true;
                 }
 
+                // #jogada especial en passant
+                if (posicao.Linha == 3) {
+                    Posicao esquerda = new Posicao(posicao.Linha, posicao.Coluna - 1);
+                    if (tabuleiro.posicaoNoTabuleiro(esquerda) && existeInimigo(esquerda) && (tabuleiro.getPeca(esquerda) == partida.vuneravelEnPassant)) {
+                        mat[esquerda.Linha - 1, esquerda.Coluna] = true;
+                    }
+                    Posicao direita = new Posicao(posicao.Linha, posicao.Coluna + 1);
+                    if (tabuleiro.posicaoNoTabuleiro(direita) && existeInimigo(direita) && (tabuleiro.getPeca(direita) == partida.vuneravelEnPassant)) {
+                        mat[direita.Linha - 1, direita.Coluna] = true;
+                    }
+                }
             } else {
                 pos.definirValores(posicao.Linha + 1, posicao.Coluna);
                 if (tabuleiro.posicaoNoTabuleiro(pos) && livre(pos)) {
@@ -68,6 +80,18 @@ namespace xadrez {
                 pos.definirValores(posicao.Linha + 1, posicao.Coluna + 1);
                 if (tabuleiro.posicaoNoTabuleiro(pos) && existeInimigo(pos)) {
                     mat[pos.Linha, pos.Coluna] = true;
+                }
+
+                // #jogada especial en passant
+                if (posicao.Linha == 4) {
+                    Posicao esquerda = new Posicao(posicao.Linha, posicao.Coluna - 1);
+                    if (tabuleiro.posicaoNoTabuleiro(esquerda) && existeInimigo(esquerda) && tabuleiro.getPeca(esquerda) == partida.vuneravelEnPassant) {
+                        mat[esquerda.Linha + 1, esquerda.Coluna] = true;
+                    }
+                    Posicao direita = new Posicao(posicao.Linha, posicao.Coluna + 1);
+                    if (tabuleiro.posicaoNoTabuleiro(direita) && existeInimigo(direita) && tabuleiro.getPeca(direita) == partida.vuneravelEnPassant) {
+                        mat[direita.Linha + 1, direita.Coluna] = true;
+                    }
                 }
             }
             return mat;
