@@ -121,6 +121,21 @@ namespace xadrez {
                 desfazMovimento(origem, destino, capturada);
                 throw new TabuleiroException("Seu rei ficou em xeque, jogada desfeita");
             }
+
+            // #jogada especial promoção
+            Peca p = tab.getPeca(destino);
+            if (p is Peao) {
+                //Se o peão chegou no limite do tabuleiro
+                if (p.cor == Cor.Branco && destino.Linha == 0 || (p.cor == Cor.Preto && destino.Linha == 7)) {
+                    p = tab.retiraPeca(destino);
+                    pecasHashSet.Remove(p);
+                    Peca dama = new Dama(p.tabuleiro, p.cor);
+                    tab.colocarPeca(dama, destino);
+                    pecasHashSet.Add(dama);
+                }
+            }
+
+
             if (estaEmXeque(corAdversario(jogadorAtual))) {
                 xeque = true; //se o seu movimento não o colocou em xeque então o rei adversario o está
             } else {
@@ -137,7 +152,6 @@ namespace xadrez {
 
 
             // #Jogada especial en passant
-            Peca p = tab.getPeca(destino);
             if (p is Peao && (origem.Linha == destino.Linha - 2 || origem.Linha == destino.Linha + 2)) {
                 vuneravelEnPassant = p;
             } else {
@@ -295,8 +309,7 @@ namespace xadrez {
             colocarNovaPeca('g', 8, new Cavalo(tab, Cor.Preto));
             colocarNovaPeca('h', 8, new Torre(tab, Cor.Preto));
             colocarNovaPeca('a', 7, new Peao(tab, Cor.Preto, this));
-            //colocarNovaPeca('b', 7, new Peao(tab, Cor.Preto, this));
-            colocarNovaPeca('b', 4, new Peao(tab, Cor.Preto, this));
+            colocarNovaPeca('b', 7, new Peao(tab, Cor.Preto, this));
             colocarNovaPeca('c', 7, new Peao(tab, Cor.Preto, this));
             colocarNovaPeca('d', 7, new Peao(tab, Cor.Preto, this));
             colocarNovaPeca('e', 7, new Peao(tab, Cor.Preto, this));
